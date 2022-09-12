@@ -17,7 +17,9 @@ OS = platform.system()
 
 OS = OS.upper()
 
-lib = input("all/No_all: ")
+lib = input("Download all pictures or select one. (All/No): ")
+
+direct = input('Directory where to save: ')
 
 lib = lib.upper()
 
@@ -30,7 +32,7 @@ for image in all_image:
 	image_link = image.find('a').get('href')
 	image_link2 = image.find('img', class_ = 'serp-item__thumb justifier__thumb').get('src')
 
-	if lib == 'NO_ALL':
+	if lib == 'NO':
 		if OS == 'WINDOWS':
 				try:
 					golf = re.split('img_url=|&text', image_link)
@@ -41,10 +43,10 @@ for image in all_image:
 
 					image_bytes = requests.get(p).content
 
-					with open(f'{dt_now}.jpg','wb') as file:
+					with open(f'{direct}{dt_now}.jpg','wb') as file:
 						file.write(image_bytes)
 
-					os.system(f"{dt_now}.jpg")
+					os.system(f"{direct}{dt_now}.jpg")
 
 					Y = input("save (YES/NO): ")
 
@@ -55,7 +57,7 @@ for image in all_image:
 
 					elif Y == 'NO':
 						os.system("taskkill /f /IM Microsoft.Photos.exe")
-						os.system(f"del {dt_now}.jpg")
+						os.remove(f"{direct}{dt_now}.jpg")
 
 					else:
 						pass
@@ -67,10 +69,10 @@ for image in all_image:
 
 					image_bytes = requests.get(url3).content
 
-					with open(f'{dt_now}.jpg','wb') as file:
+					with open(f'{direct}{dt_now}.jpg','wb') as file:
 						file.write(image_bytes)
 
-					os.system(f"{dt_now}.jpg")
+					os.system(f"{direct}{dt_now}.jpg")
 
 					Y = input("save (YES/NO): ")
 
@@ -81,7 +83,7 @@ for image in all_image:
 
 					elif Y == 'NO':
 						os.system("taskkill /f /IM Microsoft.Photos.exe")
-						os.system(f"del {dt_now}.jpg")
+						os.remove(f"{direct}{dt_now}.jpg")
 
 					else:
 						pass
@@ -98,10 +100,10 @@ for image in all_image:
 
 				image_bytes = requests.get(p).content
 
-				with open(f'{dt_now}.jpg', 'wb') as file:
+				with open(f'{direct}{dt_now}.jpg', 'wb') as file:
 					file.write(image_bytes)
 
-				os.system(f"{dt_now}.jpg")
+				os.system(f"fim {direct}{dt_now}.jpg")
 
 				Y = input("save (YES/NO): ")
 
@@ -111,7 +113,7 @@ for image in all_image:
 					pass
 
 				elif Y == 'NO':
-					os.system(f"rm -r {dt_now}.jpg")
+					os.remove(f"{direct}{dt_now}.jpg")
 
 				else:
 					pass
@@ -123,10 +125,10 @@ for image in all_image:
 
 				image_bytes = requests.get(url3).content
 
-				with open(f'{dt_now}.jpg','wb') as file:
+				with open(f'{direct}{dt_now}.jpg','wb') as file:
 					file.write(image_bytes)
 
-				os.system(f"fim {dt_now}.jpg")
+				os.system(f"fim {direct}{dt_now}.jpg")
 
 				Y = input("save (YES/NO): ")
 
@@ -136,7 +138,7 @@ for image in all_image:
 					pass
 
 				elif Y == 'NO':
-					os.system(f"rm -r {dt_now}.jpg")
+					os.remove(f"{direct}{dt_now}.jpg")
 
 				else:
 					pass
@@ -154,7 +156,7 @@ for image in all_image:
 
 				image_bytes = requests.get(p).content
 
-				with open(f'{dt_now}.jpg','wb') as file:
+				with open(f'{direct}{dt_now}.jpg','wb') as file:
 					file.write(image_bytes)
 
 				dt_now = dt_now + 1
@@ -164,7 +166,7 @@ for image in all_image:
 
 				image_bytes = requests.get(url3).content
 
-				with open(f'{dt_now}.jpg','wb') as file:
+				with open(f'{direct}{dt_now}.jpg','wb') as file:
 					file.write(image_bytes)
 
 				print("Picture",dt_now)
@@ -181,7 +183,7 @@ for image in all_image:
 
 				image_bytes = requests.get(p).content
 
-				with open(f'{dt_now}.jpg','wb') as file:
+				with open(f'{direct}{dt_now}.jpg','wb') as file:
 					file.write(image_bytes)
 
 				dt_now = dt_now + 1
@@ -191,7 +193,7 @@ for image in all_image:
 
 				image_bytes = requests.get(url3).content
 
-				with open(f'{dt_now}.jpg','wb') as file:
+				with open(f'{direct}{dt_now}.jpg','wb') as file:
 					file.write(image_bytes)
 
 				print("Picture",dt_now)
