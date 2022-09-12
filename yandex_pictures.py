@@ -43,10 +43,10 @@ for image in all_image:
 
 					image_bytes = requests.get(p).content
 
-					with open(f'{direct}{dt_now}.jpg','wb') as file:
+					with open(f'{direct}\\{dt_now}.jpg','wb') as file:
 						file.write(image_bytes)
 
-					os.system(f"{direct}{dt_now}.jpg")
+					os.system(f"{direct}\\{dt_now}.jpg")
 
 					Y = input("save (YES/NO): ")
 
@@ -57,7 +57,7 @@ for image in all_image:
 
 					elif Y == 'NO':
 						os.system("taskkill /f /IM Microsoft.Photos.exe")
-						os.remove(f"{direct}{dt_now}.jpg")
+						os.remove(f"{direct}\\{dt_now}.jpg")
 
 					else:
 						pass
@@ -69,10 +69,10 @@ for image in all_image:
 
 					image_bytes = requests.get(url3).content
 
-					with open(f'{direct}{dt_now}.jpg','wb') as file:
+					with open(f'{direct}\\{dt_now}.jpg','wb') as file:
 						file.write(image_bytes)
 
-					os.system(f"{direct}{dt_now}.jpg")
+					os.system(f"{direct}\\{dt_now}.jpg")
 
 					Y = input("save (YES/NO): ")
 
@@ -83,7 +83,7 @@ for image in all_image:
 
 					elif Y == 'NO':
 						os.system("taskkill /f /IM Microsoft.Photos.exe")
-						os.remove(f"{direct}{dt_now}.jpg")
+						os.remove(f"{direct}\\{dt_now}.jpg")
 
 					else:
 						pass
@@ -100,10 +100,10 @@ for image in all_image:
 
 				image_bytes = requests.get(p).content
 
-				with open(f'{direct}{dt_now}.jpg', 'wb') as file:
+				with open(f'{direct}/{dt_now}.jpg', 'wb') as file:
 					file.write(image_bytes)
 
-				os.system(f"fim {direct}{dt_now}.jpg")
+				os.system(f"fim {direct}/{dt_now}.jpg")
 
 				Y = input("save (YES/NO): ")
 
@@ -113,7 +113,7 @@ for image in all_image:
 					pass
 
 				elif Y == 'NO':
-					os.remove(f"{direct}{dt_now}.jpg")
+					os.remove(f"{direct}/{dt_now}.jpg")
 
 				else:
 					pass
@@ -125,10 +125,10 @@ for image in all_image:
 
 				image_bytes = requests.get(url3).content
 
-				with open(f'{direct}{dt_now}.jpg','wb') as file:
+				with open(f'{direct}/{dt_now}.jpg','wb') as file:
 					file.write(image_bytes)
 
-				os.system(f"fim {direct}{dt_now}.jpg")
+				os.system(f"fim {direct}/{dt_now}.jpg")
 
 				Y = input("save (YES/NO): ")
 
@@ -138,7 +138,7 @@ for image in all_image:
 					pass
 
 				elif Y == 'NO':
-					os.remove(f"{direct}{dt_now}.jpg")
+					os.remove(f"{direct}/{dt_now}.jpg")
 
 				else:
 					pass
@@ -156,8 +156,10 @@ for image in all_image:
 
 				image_bytes = requests.get(p).content
 
-				with open(f'{direct}{dt_now}.jpg','wb') as file:
+				with open(f'{direct}\\{dt_now}.jpg','wb') as file:
 					file.write(image_bytes)
+				
+				print("Picture", dt_now)
 
 				dt_now = dt_now + 1
 
@@ -166,7 +168,7 @@ for image in all_image:
 
 				image_bytes = requests.get(url3).content
 
-				with open(f'{direct}{dt_now}.jpg','wb') as file:
+				with open(f'{direct}\\{dt_now}.jpg','wb') as file:
 					file.write(image_bytes)
 
 				print("Picture",dt_now)
@@ -183,8 +185,10 @@ for image in all_image:
 
 				image_bytes = requests.get(p).content
 
-				with open(f'{direct}{dt_now}.jpg','wb') as file:
+				with open(f'{direct}/{dt_now}.jpg','wb') as file:
 					file.write(image_bytes)
+				
+				print("Picture", dt_now)
 
 				dt_now = dt_now + 1
 
@@ -193,7 +197,7 @@ for image in all_image:
 
 				image_bytes = requests.get(url3).content
 
-				with open(f'{direct}{dt_now}.jpg','wb') as file:
+				with open(f'{direct}/{dt_now}.jpg','wb') as file:
 					file.write(image_bytes)
 
 				print("Picture",dt_now)
