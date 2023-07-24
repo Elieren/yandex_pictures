@@ -5,201 +5,143 @@ import os
 import platform
 import re
 
-dt_now = 0
+class UrlImage():
 
-lord = []
-lord1 = []
+    def __init__(self, search, value):
+        self.__search = search
+        self.__value = value
+        self.__parse()
+    
+    def __parse(self):
+        j = 0
+        i = 0
+        status = True
+        self.__image_link = []
+        self.__image_link2 = []
+        
+        while status:
+            url = f'https://yandex.ru/images/search?from=tabbar&text={self.__search}&p={i}'
 
-storage = input('search: ')
-url = f'https://yandex.ru/images/search?from=tabbar&text={storage}'
+            responce = requests.get(url).text
+            soup = BeautifulSoup(responce, 'lxml')
+            block = soup.find("div", class_= 'serp-controller__content')
+            all_image = block.find_all("div", class_= 'serp-item__preview')
 
-OS = platform.system()
+            for image in all_image:
+                if j < self.__value:
+                    self.__image_link.append(image.find('a').get('href'))
+                    self.__image_link2.append(image.find('img', class_ = 'serp-item__thumb justifier__thumb').get('src'))
+                    j += 1
+                else:
+                    status = False
+                    break
+            i += 1
 
-OS = OS.upper()
+        return self.__image_link, self.__image_link2
 
-lib = input("Download all pictures or select one. (All/No): ")
+class Download():
+
+    def __init__(self, image_link, image_link2, value, level, direct):
+        self.__image_link = image_link
+        self.__image_link2 = image_link2
+        self.__value = value
+        self.__os_platform = platform.system().lower()
+        self.__level = level
+        self.__direct = direct
+
+        try:
+            self.__image_normal_save_select()
+        
+        except requests.exceptions.ConnectionError:
+            self.__error_url()
+
+    def __image_normal_save_select(self):
+
+        url_image = re.split('img_url=|&text', self.__image_link)
+
+        normal_link = url_image[1].replace('%3A', ':').replace(r'%2F', '/').replace('%25','%').replace('%28', '(').replace('%29', ')')
+
+        image_bytes = requests.get(normal_link).content
+
+        with open(f'{self.__direct}/{self.__value}.jpg','wb') as file:
+            file.write(image_bytes)
+        
+        if self.__level == 0:
+            if self.__os_platform == 'windows':
+                os.system(f"{self.__direct}\\{self.__value}.jpg")
+            else:
+                os.system(f"{self.__direct}/{self.__value}.jpg")
+
+            while True:
+                select = input("save (YES/NO): ")
+
+                select = select.lower()
+                
+                if select == 'yes':
+                    break
+
+                elif select == 'no':
+                    os.remove(f"{self.__direct}/{self.__value}.jpg")
+                    break
+
+                else:
+                    pass
+        else:
+            print("Picture", self.__value)
+
+    def __error_url(self):
+
+        url = f'http:{self.__image_link2}'
+
+        image_bytes = requests.get(url).content
+
+        with open(f'{self.__direct}/{self.__value}.jpg','wb') as file:
+            file.write(image_bytes)
+
+        if self.__level == 0:
+            if self.__os_platform == 'windows':
+                os.system(f"{self.__direct}\\{self.__value}.jpg")
+            else:
+                os.system(f"{self.__direct}/{self.__value}.jpg")
+
+            while True:
+                select = input("save (YES/NO): ")
+
+                select = select.lower()
+
+                if select == 'yes':
+                    break
+
+                elif select == 'no':
+                    break
+                    os.remove(f"{self.__direct}/{self.__value}.jpg")
+
+                else:
+                    pass
+        
+        else:
+            print("Picture", self.__value)
+
+#==================================================================================================#
+
+search = input('search: ')
+
+value = int(input('How many pictures to parse: '))
+
+image_link_tuple = UrlImage(search, value)
+image_link, image_link2 = image_link_tuple._UrlImage__image_link, image_link_tuple._UrlImage__image_link2
+
+select = input("Download all pictures or select one. (All/No): ").lower()
 
 direct = input('Directory where to save: ')
 
-lib = lib.upper()
+for value in range(len(image_link)):
 
-responce = requests.get(url).text
-soup = BeautifulSoup(responce, 'lxml')
-block = soup.find("div", class_= 'serp-controller__content')
-all_image = block.find_all("div", class_= 'serp-item__preview')
+    if select == 'no':
+        Download(image_link[value], image_link2[value], value, 0, direct)
 
-for image in all_image:
-	image_link = image.find('a').get('href')
-	image_link2 = image.find('img', class_ = 'serp-item__thumb justifier__thumb').get('src')
+    elif select == 'all':
+        Download(image_link[value], image_link2[value], value, 1, direct)
 
-	if lib == 'NO':
-		if OS == 'WINDOWS':
-				try:
-					golf = re.split('img_url=|&text', image_link)
-
-					k = golf[1]
-
-					p = k.replace('%3A', ':').replace(r'%2F', '/').replace('%25','%').replace('%28', '(').replace('%29', ')')
-
-					image_bytes = requests.get(p).content
-
-					with open(f'{direct}\\{dt_now}.jpg','wb') as file:
-						file.write(image_bytes)
-
-					os.system(f"{direct}\\{dt_now}.jpg")
-
-					Y = input("save (YES/NO): ")
-
-					Y = Y.upper()
-
-					if Y == 'YES':
-						os.system("taskkill /f /IM Microsoft.Photos.exe")
-
-					elif Y == 'NO':
-						os.system("taskkill /f /IM Microsoft.Photos.exe")
-						os.remove(f"{direct}\\{dt_now}.jpg")
-
-					else:
-						pass
-
-					dt_now = dt_now + 1
-
-				except requests.exceptions.ConnectionError:
-					url3 = f'http:{image_link2}'
-
-					image_bytes = requests.get(url3).content
-
-					with open(f'{direct}\\{dt_now}.jpg','wb') as file:
-						file.write(image_bytes)
-
-					os.system(f"{direct}\\{dt_now}.jpg")
-
-					Y = input("save (YES/NO): ")
-
-					Y = Y.upper()
-
-					if Y == 'YES':
-						os.system("taskkill /f /IM Microsoft.Photos.exe")
-
-					elif Y == 'NO':
-						os.system("taskkill /f /IM Microsoft.Photos.exe")
-						os.remove(f"{direct}\\{dt_now}.jpg")
-
-					else:
-						pass
-
-					dt_now = dt_now + 1
-
-		elif OS == 'LINUX':
-			try:
-				golf = re.split('img_url=|&text', image_link)
-
-				k = golf[1]
-
-				p = k.replace('%3A', ':').replace(r'%2F', '/').replace('%25','%').replace('%28', '(').replace('%29', ')')
-
-				image_bytes = requests.get(p).content
-
-				with open(f'{direct}/{dt_now}.jpg', 'wb') as file:
-					file.write(image_bytes)
-
-				os.system(f"fim {direct}/{dt_now}.jpg")
-
-				Y = input("save (YES/NO): ")
-
-				Y = Y.upper()
-
-				if Y == 'YES':
-					pass
-
-				elif Y == 'NO':
-					os.remove(f"{direct}/{dt_now}.jpg")
-
-				else:
-					pass
-
-				dt_now = dt_now + 1
-
-			except requests.exceptions.ConnectionError:
-				url3 = f'http:{image_link2}'
-
-				image_bytes = requests.get(url3).content
-
-				with open(f'{direct}/{dt_now}.jpg','wb') as file:
-					file.write(image_bytes)
-
-				os.system(f"fim {direct}/{dt_now}.jpg")
-
-				Y = input("save (YES/NO): ")
-
-				Y = Y.upper()
-
-				if Y == 'YES':
-					pass
-
-				elif Y == 'NO':
-					os.remove(f"{direct}/{dt_now}.jpg")
-
-				else:
-					pass
-
-				dt_now = dt_now + 1
-
-	if lib == 'ALL':
-		if OS == 'WINDOWS':
-			try:
-				golf = re.split('img_url=|&text', image_link)
-
-				k = golf[1]
-
-				p = k.replace('%3A', ':').replace(r'%2F', '/').replace('%25','%').replace('%28', '(').replace('%29', ')')
-
-				image_bytes = requests.get(p).content
-
-				with open(f'{direct}\\{dt_now}.jpg','wb') as file:
-					file.write(image_bytes)
-				
-				print("Picture", dt_now)
-
-				dt_now = dt_now + 1
-
-			except requests.exceptions.ConnectionError:
-				url3 = f'http:{image_link2}'
-
-				image_bytes = requests.get(url3).content
-
-				with open(f'{direct}\\{dt_now}.jpg','wb') as file:
-					file.write(image_bytes)
-
-				print("Picture",dt_now)
-
-				dt_now = dt_now + 1
-
-		elif OS == 'LINUX':
-			try:
-				golf = re.split('img_url=|&text', image_link)
-
-				k = golf[1]
-
-				p = k.replace('%3A', ':').replace(r'%2F', '/').replace('%25','%').replace('%28', '(').replace('%29', ')')
-
-				image_bytes = requests.get(p).content
-
-				with open(f'{direct}/{dt_now}.jpg','wb') as file:
-					file.write(image_bytes)
-				
-				print("Picture", dt_now)
-
-				dt_now = dt_now + 1
-
-			except requests.exceptions.ConnectionError:
-				url3 = f'http:{image_link2}'
-
-				image_bytes = requests.get(url3).content
-
-				with open(f'{direct}/{dt_now}.jpg','wb') as file:
-					file.write(image_bytes)
-
-				print("Picture",dt_now)
-
-				dt_now = dt_now + 1
+    else:
+        pass
