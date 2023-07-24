@@ -7,9 +7,11 @@ import re
 
 class UrlImage():
 
-    def __init__(self, search, value):
+    def __init__(self, search, value=30, iw=None, ih=None):
         self.__search = search
         self.__value = value
+        self.__iw = iw
+        self.__ih = ih
     
     def parse(self):
         j = 0
@@ -19,7 +21,7 @@ class UrlImage():
         self.__image_link2 = []
         
         while status:
-            url = f'https://yandex.ru/images/search?from=tabbar&text={self.__search}&p={i}'
+            url = f'https://yandex.ru/images/search?from=tabbar&text={self.__search}&p={i}&isize=eq&iw={self.__iw}&ih={self.__ih}'
 
             responce = requests.get(url).text
             soup = BeautifulSoup(responce, 'lxml')
@@ -56,7 +58,7 @@ class Download():
 
     def __image_normal_save_select(self):
 
-        url_image = re.split('img_url=|&text', self.__image_link)
+        url_image = re.split('img_url=|&from', self.__image_link)
 
         normal_link = url_image[1].replace('%3A', ':').replace(r'%2F', '/').replace('%25','%').replace('%28', '(').replace('%29', ')')
 
