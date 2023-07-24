@@ -10,9 +10,8 @@ class UrlImage():
     def __init__(self, search, value):
         self.__search = search
         self.__value = value
-        self.__parse()
     
-    def __parse(self):
+    def parse(self):
         j = 0
         i = 0
         status = True
@@ -128,8 +127,7 @@ search = input('search: ')
 
 value = int(input('How many pictures to parse: '))
 
-image_link_tuple = UrlImage(search, value)
-image_link, image_link2 = image_link_tuple._UrlImage__image_link, image_link_tuple._UrlImage__image_link2
+image_link, image_link2 = UrlImage(search, value).parse()
 
 select = input("Download all pictures or select one. (All/No): ").lower()
 
