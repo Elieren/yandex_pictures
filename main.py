@@ -1,9 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
-import lxml
 import os
 import platform
 import re
+
 
 class UrlImage():
 
@@ -12,26 +12,34 @@ class UrlImage():
         self.__value = value
         self.__iw = iw
         self.__ih = ih
-    
+
     def parse(self):
         j = 0
         i = 0
         status = True
         self.__image_link = []
         self.__image_link2 = []
-        
+
         while status:
-            url = f'https://yandex.ru/images/search?from=tabbar&text={self.__search}&p={i}&isize=eq&iw={self.__iw}&ih={self.__ih}'
+            url = f'https://yandex.ru/images/search?from=tabbar \
+                &text={self.__search}&p={i}&isize=eq \
+                    &iw={self.__iw}&ih={self.__ih}'
 
             responce = requests.get(url).text
             soup = BeautifulSoup(responce, 'lxml')
-            block = soup.find("div", class_= 'serp-controller__content')
-            all_image = block.find_all("div", class_= 'serp-item__preview')
+            block = soup.find(
+                "div",
+                class_='serp-controller__content'
+            )
+            all_image = block.find_all("div", class_='serp-item__preview')
 
             for image in all_image:
                 if j < self.__value:
                     self.__image_link.append(image.find('a').get('href'))
-                    self.__image_link2.append(image.find('img', class_ = 'serp-item__thumb justifier__thumb').get('src'))
+                    self.__image_link2.append(image.find(
+                        'img',
+                        class_='serp-item__thumb justifier__thumb'
+                    ).get('src'))
                     j += 1
                 else:
                     status = False
@@ -39,6 +47,7 @@ class UrlImage():
             i += 1
 
         return self.__image_link, self.__image_link2
+
 
 class Download():
 
@@ -52,7 +61,7 @@ class Download():
 
         try:
             self.__image_normal_save_select()
-        
+
         except requests.exceptions.ConnectionError:
             self.__error_url()
 
@@ -60,13 +69,14 @@ class Download():
 
         url_image = re.split('img_url=|&from', self.__image_link)
 
-        normal_link = url_image[1].replace('%3A', ':').replace(r'%2F', '/').replace('%25','%').replace('%28', '(').replace('%29', ')')
+        normal_link = url_image[1].replace('%3A', ':').replace(r'%2F', '/') \
+            .replace('%25', '%').replace('%28', '(').replace('%29', ')')
 
         image_bytes = requests.get(normal_link).content
 
-        with open(f'{self.__direct}/{self.__value}.jpg','wb') as file:
+        with open(f'{self.__direct}/{self.__value}.jpg', 'wb') as file:
             file.write(image_bytes)
-        
+
         if self.__level == 0:
             if self.__os_platform == 'windows':
                 os.system(f"{self.__direct}\\{self.__value}.jpg")
@@ -77,7 +87,7 @@ class Download():
                 select = input("save (YES/NO): ")
 
                 select = select.lower()
-                
+
                 if select == 'yes':
                     break
 
@@ -96,7 +106,7 @@ class Download():
 
         image_bytes = requests.get(url).content
 
-        with open(f'{self.__direct}/{self.__value}.jpg','wb') as file:
+        with open(f'{self.__direct}/{self.__value}.jpg', 'wb') as file:
             file.write(image_bytes)
 
         if self.__level == 0:
@@ -119,11 +129,12 @@ class Download():
 
                 else:
                     pass
-        
+
         else:
             print("Picture", self.__value)
 
-#==================================================================================================#
+# =============================================================================
+
 
 search = input('search: ')
 
